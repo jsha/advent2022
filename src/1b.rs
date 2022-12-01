@@ -1,21 +1,17 @@
 use std::io::stdin;
 
 fn main() {
-    let mut elves = vec![];
-    let mut current = 0;
-    for line in stdin().lines() {
-        let line = line.unwrap();
-        if line == "" {
-            elves.push(current);
-            current = 0;
-        } else {
-            current += line.parse::<i32>().unwrap();
-        }
-    }
-    if current != 0 {
-        elves.push(current);
-    }
+    let mut elves = stdin()
+        .lines()
+        .map(Result::unwrap)
+        .fold(vec![0], |mut v, line| {
+            if line.is_empty() {
+                v.push(0);
+            } else {
+                *v.last_mut().unwrap() += line.parse::<i64>().unwrap();
+            }
+            v
+        });
     elves.sort();
-    let sum = elves.iter().rev().take(3).fold(0, |c, n| c + n);
-    println!("{}", sum);
+    println!("{}", elves.iter().rev().take(3).sum::<i64>());
 }
